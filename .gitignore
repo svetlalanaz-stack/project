@@ -87,3 +87,10 @@ typings/
 
 .idea
 .DS_Store
+
+# Build output
+dist
+dist-ssr
+
+# Vite cache
+.vite
