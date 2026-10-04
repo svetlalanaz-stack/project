@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StepBar from "@/components/StepBar";
+import { fetchLastRoutes, type RecentTicket } from "@/api/last";
 
 import { useBooking, type Train } from "@/context/BookingContext";
 
@@ -107,30 +108,6 @@ const TRAINS: Train[] = [
 const ALL_TRAINS = [...TRAINS, ...TRAINS, ...TRAINS];
 
 const PER_PAGE = 3;
-
-const RECENT_TICKETS = [
-  {
-    from: "Санкт-Петербург",
-    fromSub: "Курский вокзал",
-    to: "Самара",
-    toSub: "Московский вокзал",
-    price: 2500,
-  },
-  {
-    from: "Москва",
-    fromSub: "Курский вокзал",
-    to: "Казань",
-    toSub: "Московский вокзал",
-    price: 3500,
-  },
-  {
-    from: "Казань",
-    fromSub: "Курский вокзал",
-    to: "Нижний новгород",
-    toSub: "Московский вокзал",
-    price: 3800,
-  },
-];
 
 function getMonthDays(year: number, month: number) {
   const firstDayOfMonth = new Date(year, month, 1);
@@ -407,6 +384,8 @@ export default function SearchPage() {
   const [backArrRange, setBackArrRange] = useState<[number, number]>([0, 24]);
 
   const [page, setPage] = useState(1);
+  const [recentTickets, setRecentTickets] = useState<RecentTicket[]>([]);
+  const [recentError, setRecentError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("времени");
 
   const heroFormRef = useRef<HTMLDivElement>(null);
@@ -422,6 +401,14 @@ export default function SearchPage() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    fetchLastRoutes()
+      .then(setRecentTickets)
+      .catch((err) =>
+        setRecentError(err instanceof Error ? err.message : "Ошибка"),
+      );
   }, []);
 
   const parseDayFromString = (s: string): number | null => {
@@ -1094,7 +1081,12 @@ export default function SearchPage() {
               Последние билеты
             </h3>
             <div className="space-y-2">
-              {RECENT_TICKETS.map((t, i) => (
+              {recentError && (
+                <div className="bg-white rounded p-3 border border-red-200 text-xs text-red-500">
+                  {recentError}
+                </div>
+              )}
+              {recentTickets.map((t, i) => (
                 <div
                   key={i}
                   className="bg-white rounded p-3 border border-gray-200"
