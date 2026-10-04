@@ -1,7 +1,41 @@
 import { useState } from "react";
+import { subscribeToNews } from "@/api/subscribe";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function handleSubscribe() {
+    if (status === "loading") return;
+
+    const trimmed = email.trim();
+    if (!trimmed || !trimmed.includes("@")) {
+      setStatus("error");
+      setMessage("Введите корректный email");
+      return;
+    }
+
+    setStatus("loading");
+    setMessage(null);
+
+    try {
+      const result = await subscribeToNews(trimmed);
+      if (result.status) {
+        setStatus("success");
+        setMessage("Спасибо, вы подписаны!");
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage("Не удалось оформить подписку");
+      }
+    } catch (err) {
+      setStatus("error");
+      setMessage(err instanceof Error ? err.message : "Ошибка сервера");
+    }
+  }
 
   return (
     <footer className="bg-[#1e1e1e] text-gray-300">
@@ -86,9 +120,20 @@ export default function Footer() {
                 placeholder="E-mail"
                 className="flex-1 bg-white/10 text-white placeholder-gray-500 text-sm px-3 py-2 outline-none focus:ring-1 focus:ring-[#f5a623]"
               />
-              <button className="border border-white text-white hover:bg-[#f5a623] hover:border-[#f5a623] hover:text-black active:bg-white active:border-white active:text-black text-xs font-bold px-5 py-2 tracking-widest transition-colors">
-                ОТПРАВИТЬ
+              <button
+                onClick={handleSubscribe}
+                disabled={status === "loading"}
+                className="border border-white text-white hover:bg-[#f5a623] hover:border-[#f5a623] hover:text-black active:bg-white active:border-white active:text-black text-xs font-bold px-5 py-2 tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {status === "loading" ? "..." : "ОТПРАВИТЬ"}
               </button>
+              {message && (
+                <p
+                  className={`text-[10px] mt-2 ${status === "success" ? "text-green-400" : "text-red-400"}`}
+                >
+                  {message}
+                </p>
+              )}
             </div>
           </div>
 

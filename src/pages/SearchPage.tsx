@@ -4,20 +4,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StepBar from "@/components/StepBar";
 import { fetchLastRoutes, type RecentTicket } from "@/api/last";
+import { useCitySearch } from "@/hooks/useCitySearch";
 
 import { useBooking, type Train } from "@/context/BookingContext";
-
-const CITIES = [
-  "АНГАРСК",
-  "АРХАНГЕЛЬСК",
-  "АСТРАХАНЬ",
-  "БАРНАУЛ",
-  "БЕЛГОРОД",
-  "БЛАГОВЕЩЕНСК",
-  "БРАТСК",
-  "БРЯНСК",
-  "ВЕЛИКИЙ НОВГОРОД",
-];
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
@@ -388,6 +377,9 @@ export default function SearchPage() {
   const [recentError, setRecentError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("времени");
 
+  const fromSearch = useCitySearch(from);
+  const toSearch = useCitySearch(to);
+
   const heroFormRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -576,18 +568,31 @@ export default function SearchPage() {
                         <div className="px-3 py-1.5 bg-gray-100 text-xs font-medium text-gray-500">
                           {from.toUpperCase()}
                         </div>
-                        {CITIES.map((c) => (
+                        {fromSearch.cities.map((c) => (
                           <button
-                            key={c}
+                            key={c._id}
                             onMouseDown={() => {
-                              setFrom(c.charAt(0) + c.slice(1).toLowerCase());
+                              const display =
+                                c.name.charAt(0).toUpperCase() +
+                                c.name.slice(1);
+                              setFrom(display);
                               setShowDropdownFrom(false);
                             }}
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50 text-gray-700"
                           >
-                            {c}
+                            {c.name}
                           </button>
                         ))}
+                        {fromSearch.loading && (
+                          <div className="px-3 py-1.5 text-xs text-gray-400">
+                            Поиск...
+                          </div>
+                        )}
+                        {fromSearch.error && (
+                          <div className="px-3 py-1.5 text-xs text-red-500">
+                            {fromSearch.error}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -622,18 +627,31 @@ export default function SearchPage() {
                         <div className="px-3 py-1.5 bg-gray-100 text-xs font-medium text-gray-500">
                           {to.toUpperCase()}
                         </div>
-                        {CITIES.map((c) => (
+                        {toSearch.cities.map((c) => (
                           <button
-                            key={c}
+                            key={c._id}
                             onMouseDown={() => {
-                              setTo(c.charAt(0) + c.slice(1).toLowerCase());
+                              const display =
+                                c.name.charAt(0).toUpperCase() +
+                                c.name.slice(1);
+                              setTo(display);
                               setShowDropdownTo(false);
                             }}
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-gray-50 text-gray-700"
                           >
-                            {c}
+                            {c.name}
                           </button>
                         ))}
+                        {toSearch.loading && (
+                          <div className="px-3 py-1.5 text-xs text-gray-400">
+                            Поиск...
+                          </div>
+                        )}
+                        {toSearch.error && (
+                          <div className="px-3 py-1.5 text-xs text-red-500">
+                            {toSearch.error}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
