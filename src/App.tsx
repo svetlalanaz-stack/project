@@ -11,7 +11,7 @@ import SuccessPage from "@/pages/SuccessPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <BookingProvider>
         <Routes>
           <Route path="/" element={<HomePage />} />
