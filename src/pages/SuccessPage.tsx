@@ -83,7 +83,7 @@ export default function SuccessPage() {
       
       <div
         className="relative w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(public/images/station-background.png)` }}
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}images/station-background.png)` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-[#c47a00]/60 pointer-events-none" />
 

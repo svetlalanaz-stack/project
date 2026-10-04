@@ -192,7 +192,7 @@ export default function HomePage() {
     >
       <div
         className="relative w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(public/images/train-background.png)` }}
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}images/train-background.png)` }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-[#c47a00]/50 pointer-events-none" />
 
@@ -380,7 +380,7 @@ export default function HomePage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(public/images/railway-background.png)`,
+            backgroundImage: `url(${import.meta.env.BASE_URL}images/railway-background.png)`,
           }}
         />
         <div className="absolute inset-0 bg-[#c47a00]/20" />

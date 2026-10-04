@@ -650,7 +650,7 @@ export default function SeatsPage() {
       <div
         className="relative w-full bg-cover bg-center"
         style={{
-          backgroundImage: `url(public/images/train-background-search.png)`,
+          backgroundImage: `url(${import.meta.env.BASE_URL}images/train-background-search.png)`,
         }}
       >
         <div className="absolute inset-0 bg-black/60 pointer-events-none" />
