@@ -5,6 +5,7 @@ import path from 'node:path'
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig({
+  base: '/project/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -20,4 +21,5 @@ export default defineConfig({
     host: 'localhost',
     port: 5173,
   },
+  
 })
